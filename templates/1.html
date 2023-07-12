@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digit Recognition</title>
+	<style>
+	   body
+       {
+           background-color: #B7B4B4;
+           text-align: center;
+           font-size: 24px;
+	        }
+
+	   #header{
+  		     float:left;
+  			   margin-left:100px;
+		       }
+
+		#msg{
+    		   float:right;
+    			 margin-right:400px;
+		       }
+
+		.box{
+          width:100%;
+		    }
+
+	   .upload{
+          background-color:white;
+    		  float:left;
+    			margin-left:10%;
+    			border-radius: 25px;
+          border: 2px solid green ;
+    			height:350px;
+    			width:35%;
+	       }
+
+	   .prediction{
+    	    background-color:white;
+    		  float:left;
+    		  margin-left:10%;
+    		  border-radius: 25px;
+    		  border: 2px solid green ;
+    		  height:350px;
+    		  width:35%;
+          }
+
+       .first{
+           height:70%;
+           width:100%;
+
+       }
+
+       .first img
+       {
+           height:100%;
+           width:94%;
+           margin-left:3%;
+           margin-right:3%;
+           border-radius: 10px;
+       }
+
+    	 .second{
+        		padding-right: 5%;
+            padding-left: 5%;
+            padding-top: 3%;
+            padding-bottom: 3%;
+            margin-top:5%;
+            margin-left:3%;
+            margin-right:3%;
+            margin-bottom:3%;
+            font-size: 24px;
+            background-color: #B7B4B4;
+            border-radius: 10px;
+
+    	 }
+      .predition_time
+      {
+        padding-right: 5%;
+        padding-left: 5%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        margin-top:2%;
+        margin-left:3%;
+        margin-right:3%;
+        margin-bottom:3%;
+        font-size: 24px;
+        background-color: #B7B4B4;
+        border-radius: 10px;
+      }
+
+	</style>
+</head>
+<body align="center">
+
+    <h1>Digit Recognition</h1>
+
+    <form method=post enctype=multipart/form-data>
+	     <p>Previous Work</p>
+
+            <input type=text name=index placeholder="Enter index">
+            <input type=submit value=Check>
+    </form>
+
+	      
+	<br>
+
+	<div class = "box">
+
+				<div class="upload">
+					     <h3>Image</h3>
+						<div class="first">
+							{% if img_src %}
+							<img src="{{ img_src }}">
+						    {% endif %}
+						</div>
+				</div>
+
+				<div class="prediction">
+					<h3>Recognition</h3>
+            <div class="second">
+              Prediction =
+              {% if predition %}
+              {{ predition }}
+              {% else %}
+    					Prediction will be displayed here
+    					{% endif %}
+              <br>
+              Accuracy =
+              {% if accuracy %}
+              {{ accuracy }}
+              {% else %}
+    					Accuracy will be displayed here
+    					{% endif %}
+
+              </div>
+              <div class="predition_time">
+              Predition Time =
+             {% if predition_time %}
+             {{ predition_time }}
+             {% endif %}
+             sec
+             <div>
+			</div>
+
+	</div>
+</body>
+</html>

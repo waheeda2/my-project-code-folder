@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js" integrity="sha256-WVsM3xrcqyuFNF3W1qtIKbHFsD0977nDQA8DCMp1zCw=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js" integrity="sha256-2/3R3NV5zryj0fDjD3cDh+SNiWQ/TJiMVZzAo5FrhiU=" crossorigin="anonymous"></script>
+
+    <style>
+        #root, html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        #container {
+            margin-top: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .draw {
+            border: 1px solid #000;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body onload="onLoad()">
+    <h1>
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-vector-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M10.646.646a.5.5 0 0 1 .708 0l4 4a.5.5 0 0 1 0 .708l-1.902 1.902-.829 3.313a1.5 1.5 0 0 1-1.024 1.073L1.254 14.746 4.358 4.4A1.5 1.5 0 0 1 5.43 3.377l3.313-.828L10.646.646zm-1.8 2.908l-3.173.793a.5.5 0 0 0-.358.342l-2.57 8.565 8.567-2.57a.5.5 0 0 0 .34-.357l.794-3.174-3.6-3.6z"/>
+          <path fill-rule="evenodd" d="M2.832 13.228L8 9a1 1 0 1 0-1-1l-4.228 5.168-.026.086.086-.026z"/>
+        </svg>
+            Handwritten Equation Recognition and Solution using CNN
+      </h1>
+    <div id="container">
+        <div id="operation" class="draw">
+        </div>
+        <button id="clear" type="button">Clear</button><br>
+        <button type="button" onclick="predict()">Answer</button>
+    </div>
+    <div style="margin-top: 50px; text-align: center;">
+      <div>
+        Operation:
+        <div id=operation-container></div>
+      </div>
+
+      <div style="margin-top: 25px">
+        Solution:
+        <div id=solution-container></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+    let p5Obj;
+    const s = p => {
+        p.setup = () => {
+            p.createCanvas(600, 200);
+            p.background(255);
+            document.getElementById('clear').onclick = () => {
+                p.background(255);
+            }
+        }
+
+        p.draw = () => {}
+
+        p.mouseDragged = () => {
+            p.stroke(0);
+            p.strokeWeight(3);
+            p.line(p.mouseX, p.mouseY, p.pmouseX, p.pmouseY);
+        }
+    }
+
+    function onLoad() {
+      p5Obj = new p5(s, 'operation');
+    }
+
+    function predict() {
+        const canvasD1 = document.getElementById('defaultCanvas0');
+        const base64CanvasD1 = canvasD1.toDataURL('image/png').replace('data:image/png;base64,', '');
+
+        const data = {
+          operation: base64CanvasD1,
+        }
+
+        $.ajax({
+          url: '/predictWrite',
+          type:'POST',
+          data,
+        }).done(function(data) {
+            let result = JSON.parse(data);
+            console.log(result)
+            $('#operation-container').html(result.operation);
+            $('#solution-container').html(result.solution);
+        }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest);
+            alert("error");
+        })
+    }
+    </script>
+
+{% endblock %}
